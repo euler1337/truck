@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Python Flask Bucket List App</title>
+ 
+ 
+    <link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet">
+ 
+    <link href="http://getbootstrap.com/examples/jumbotron-narrow/jumbotron-narrow.css" rel="stylesheet">
+ 
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0">
+    <style>
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+      #map {
+        height: 400px;
+      }
+    </style>
+
+
+ 
+</head>
+ 
+<body>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="{{url_for('static', filename='jquery.js') }}">\x3C/script>')</script>
+    <script type=text/javascript>
+         $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+    </script>
+
+    <div class="container">
+        <div class="header">
+            <nav>
+                <ul class="nav nav-pills pull-right">
+                    <li role="presentation" class="active"><a href="#">Home</a>
+                    </li>
+                    <li role="presentation"><a href="#">Sign In</a>
+                    </li>
+                    <li role="presentation"><a href="showSignUp">Sign Up</a>
+                    </li>
+                </ul>
+            </nav>
+            <h3 class="text-muted">Track the Truck</h3>
+        </div>
+ 
+        <div id="map"> </div>
+        <script>
+            var map;
+            function initMap () {
+                map = new google.maps.Map(document.getElementById('map'), {
+                center: {lat: 59.3271778, lng: 18.0755917},
+                zoom: 12
+            }); 
+        }
+
+      var markers = [];
+      var nrMarkers = 0;
+      
+      // Adds a marker to the map.
+      function addMarker(name, long, lat) {
+        // Add the marker at the clicked location, and add the next-available label
+        // from the array of alphabetical characters.
+        var location = {lat: lat, lng: long};
+        var marker = new google.maps.Marker({
+          position: location,
+          label: name,
+          map: map
+        });
+        markers.push(marker);
+        nrMarkers = nrMarkers + 1;
+        console.log(name + " lat: " + lat + " long: " + long);
+      }
+
+
+
+        </script>
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDQ9e8isN0Pn1psnrE5mgKSrnfNF6nuXSI&callback=initMap"
+    async defer></script>
+
+ 
+        <div class="row marketing">
+            <div class="col-lg-6">
+                <h4>Where to Eat</h4>
+                <p>Currently there are 0 trucks on the streets, all waiting to feed you!</p>
+ 
+                <h4>Hide All Trucks</h4>
+                <p>This should be a checkbox to hide/unhide all active trucks.</p>
+ 
+                <h4>Category </h4>
+                <p>This section shall filter trucks based on category.</p>
+            </div>
+ 
+            <div class="col-lg-6" id="trucklist">
+                <h4>Add Truck</h4>
+                <p> Very intresting info here...</p>
+ 
+                <h4>#Trucks on the Map</h4>
+                <p>Display the number of trucks that are currently visible on the map</p>
+ 
+                <h4>Developer</h4>
+            
+
+                <p>
+                    <script type=text/javascript>
+                        $(function() {
+                            $('a#calculate').bind('click', function() {
+                                $.getJSON($SCRIPT_ROOT + '/update', {
+                                }, function(data) {
+                                    console.log(data)
+                                    $.each(data.d, function(index, element) {
+                                        $("ol").append("<li>Truck: " + element.name + ", long: " + element.longitude + ", lat: " + element.latitude + "</li>");
+                                        addMarker(element.name, element.longitude, element.latitude);
+                                    });
+
+                                    //$("ol").append("<li>Truck: " + data.d[0].name + " </li>");
+                                //$("#result_name").text(data.d[0].name);
+                                //$("#result_long").text(data.d[0].longitude);
+                                //$("#result_lat").text(data.d[0].latitude);
+                            });
+                            return false;
+                        });
+                    });
+                    </script>
+
+
+<ol>
+</ol>
+
+   <span id=result_name>Name?</span>
+   <span id=result_long>Longitude?</span>
+   <span id=result_lat>Latitude?</span>
+<p><a href=# id=calculate>Get data from server!</a>   
+
+
+                </p>
+            
+
+            </div>
+        </div>
+ 
+        <footer class="footer">
+            <p>&copy; Euler1337 2016</p>
+        </footer>
+ 
+    </div>
+
+</body>
+ 
+</html>
